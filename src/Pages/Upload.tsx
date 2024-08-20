@@ -25,6 +25,8 @@ import {
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { DATE_FORMAT } from '../Models/Format';
 import moment from 'moment';
+import { compareRecordTypes } from '../Helpers/compareRecordTypes';
+import { RecordType } from '../Models/RecordType';
 
 interface WithTempId extends RecordBase {
   id: string;
@@ -154,6 +156,7 @@ export default function Upload() {
     {
       field: 'type',
       headerName: 'Type',
+      type: 'singleSelect',
       editable: true,
       headerAlign: 'center',
       align: 'center',
@@ -165,6 +168,10 @@ export default function Upload() {
       renderEditCell: (props) => (
         <EditTypeCell {...props} recordTypes={recordTypes} />
       ),
+      valueOptions: recordTypes.map((rt) => ({ value: rt.id, label: rt.type })),
+      sortComparator: (a: string, b: string) =>
+        compareRecordTypes(a, b, recordTypes),
+      valueFormatter: (val: RecordType) => val.type,
       flex: 1,
     },
     {

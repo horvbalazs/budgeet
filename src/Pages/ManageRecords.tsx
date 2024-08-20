@@ -1,10 +1,8 @@
 import {
   DataGrid,
   getGridDateOperators,
-  getGridNumericOperators,
   getGridStringOperators,
   GridColDef,
-  GridFilterOperator,
   GridRowSelectionModel,
 } from '@mui/x-data-grid';
 import { Record } from '../Models/Record';
@@ -86,10 +84,10 @@ export default function ManageRecords() {
     {
       field: 'type',
       headerName: 'Type',
+      type: 'singleSelect',
       editable: true,
       headerAlign: 'center',
       align: 'center',
-      type: 'singleSelect',
       renderCell: ({ row }) => {
         const type = recordTypes.find((rt) => rt.id === row.type);
 
@@ -98,7 +96,6 @@ export default function ManageRecords() {
       renderEditCell: (props) => (
         <EditTypeCell {...props} recordTypes={recordTypes} />
       ),
-      filterOperators: anyOfOperator,
       valueOptions: recordTypes.map((rt) => ({ value: rt.id, label: rt.type })),
       sortComparator: (a: string, b: string) =>
         compareRecordTypes(a, b, recordTypes),

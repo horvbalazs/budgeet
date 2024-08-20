@@ -1,9 +1,6 @@
 import {
-  CSSObject,
   Drawer as MuiDrawer,
   List,
-  Theme,
-  useTheme,
   MenuItem,
   ListItem,
   ListItemButton,
@@ -40,7 +37,7 @@ const StyledDrawer = styled(MuiDrawer)`
   }
 `;
 
-interface MenuItem {
+interface NavItem {
   label: string;
   route: string;
   icon: ReactNode;
@@ -49,7 +46,7 @@ interface MenuItem {
 const drawerWidth = 240;
 const drawerClosedWidth = 64;
 
-const menuItems: MenuItem[] = [
+const menuItems: NavItem[] = [
   { label: 'Dashboard', route: '/dashboard', icon: <DashboardIcon /> },
   { label: 'Upload', route: '/upload', icon: <FileUploadIcon /> },
   {
