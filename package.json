@@ -3,6 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@fontsource/roboto": "^5.0.14",
+    "@mui/icons-material": "^5.16.7",
+    "@mui/lab": "^5.0.0-alpha.173",
+    "@mui/material": "^5.16.7",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/x-charts": "^7.13.0",
+    "@mui/x-data-grid": "^7.13.0",
+    "@mui/x-date-pickers": "^7.13.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -10,10 +20,17 @@
     "@types/node": "^16.18.105",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "moment": "^2.30.1",
+    "random-avatar-generator": "^2.0.0",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-color": "^2.19.3",
+    "react-dom": "^17.0.0 || ^18.0.0",
+    "react-error-boundary": "^4.0.13",
+    "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
+    "styled-components": "^6.1.12",
     "typescript": "^4.9.5",
+    "unique-names-generator": "^4.7.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -40,7 +57,18 @@
       "last 1 safari version"
     ]
   },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
   "devDependencies": {
-    "firebase": "^10.13.0"
+    "@eslint/js": "^9.9.0",
+    "@mui/types": "^7.2.15",
+    "@types/react-color": "^3.0.12",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.35.0",
+    "firebase": "^10.13.0",
+    "globals": "^15.9.0",
+    "typescript-eslint": "^8.1.0"
   }
 }
