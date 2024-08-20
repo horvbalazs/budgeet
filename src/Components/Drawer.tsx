@@ -1,7 +1,6 @@
 import {
   Drawer as MuiDrawer,
   List,
-  MenuItem,
   ListItem,
   ListItemButton,
   ListItemIcon,

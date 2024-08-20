@@ -17,6 +17,7 @@ import AuthContext from '../Contexts/AuthContext';
 import { useAuth } from '../Hooks/useAuth';
 import ThemeContext from '../Contexts/ThemeContext';
 import styled from 'styled-components';
+import { ReactComponent as Logo } from '../Images/HeaderLogo.svg';
 
 const Container = styled(Box)`
   display: flex;
@@ -27,6 +28,11 @@ const AvatarButton = styled(Button)`
   display: flex;
   gap: 10px;
   text-transform: none;
+`;
+
+const HeaderLogo = styled(Logo)`
+  height: 40px;
+  width: auto;
 `;
 
 export default function Header() {
@@ -49,7 +55,7 @@ export default function Header() {
     >
       <Toolbar>
         <Container>
-          <Typography variant="h3">FinanceHelp</Typography>
+          <HeaderLogo />
           <Box flex={1} />
           {user && (
             <>
