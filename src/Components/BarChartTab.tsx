@@ -109,8 +109,6 @@ export default function BarChartTab({
     };
   }, []);
 
-  console.log(chartData);
-
   return (
     <Container ref={containerRef}>
       <BarChart

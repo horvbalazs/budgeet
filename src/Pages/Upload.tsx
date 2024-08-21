@@ -1,7 +1,7 @@
 import { Badge, Box, IconButton } from '@mui/material';
 import { DEFAULT_TYPE, useRecordType } from '../Hooks/useRecordType';
 import AuthContext from '../Contexts/AuthContext';
-import { ChangeEvent, useContext, useRef, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 import { RecordBase } from '../Models/Record';
 import ErrorToast from '../Components/ErrorToast';
 import CSVToArray from '../Helpers/CSVToArray';
@@ -27,6 +27,7 @@ import { DATE_FORMAT } from '../Models/Format';
 import moment from 'moment';
 import { compareRecordTypes } from '../Helpers/compareRecordTypes';
 import { RecordType } from '../Models/RecordType';
+import { getItem, StorageKeys } from '../storage';
 
 interface WithTempId extends RecordBase {
   id: string;
@@ -47,6 +48,14 @@ export default function Upload() {
   const [uploadedRecords, setUploadedRecords] = useState<WithTempId[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [rules, setRules] = useState<Rule[]>([]);
+
+  useEffect(() => {
+    const storageRules = getItem<Rule[]>(StorageKeys.RULES);
+
+    if (storageRules) {
+      setRules(storageRules);
+    }
+  }, []);
 
   const loading = typesFetching || uploading;
   const error = uploadError ?? fetchError;

@@ -90,7 +90,7 @@ export default function RulesModal({
       editable: true,
       renderCell: ({ row }) => (
         <ChipContainer display={'flex'} gap={1}>
-          {row.keywords.map((kw, i) => (
+          {row.keywords?.map((kw, i) => (
             <Chip key={i} label={kw} />
           ))}
         </ChipContainer>
@@ -174,7 +174,7 @@ function EditKeywordsCell(props: GridRenderCellParams<Rule, number>) {
       limitTags={4}
       options={[]}
       renderInput={(params) => (
-        <TextField {...params} placeholder="Add keywords" />
+        <TextField {...params} placeholder="Add keywords" autoFocus />
       )}
       value={row.keywords}
       onChange={(_, values) => handleChange(values)}

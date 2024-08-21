@@ -18,10 +18,12 @@ import { useAuth } from '../Hooks/useAuth';
 import ThemeContext from '../Contexts/ThemeContext';
 import styled from 'styled-components';
 import { ReactComponent as Logo } from '../Images/HeaderLogo.svg';
+import { ReactComponent as LogoDark } from '../Images/HeaderLogoDark.svg';
 
 const Container = styled(Box)`
   display: flex;
   width: 100%;
+  align-items: center;
 `;
 
 const AvatarButton = styled(Button)`
@@ -30,9 +32,13 @@ const AvatarButton = styled(Button)`
   text-transform: none;
 `;
 
-const HeaderLogo = styled(Logo)`
+const LogoContainer = styled(Box)`
   height: 40px;
-  width: auto;
+
+  svg {
+    height: 40px;
+    width: auto;
+  }
 `;
 
 export default function Header() {
@@ -55,7 +61,9 @@ export default function Header() {
     >
       <Toolbar>
         <Container>
-          <HeaderLogo />
+          <LogoContainer>
+            {theme?.palette.mode === 'dark' ? <LogoDark /> : <Logo />}
+          </LogoContainer>
           <Box flex={1} />
           {user && (
             <>

@@ -8,6 +8,7 @@ import {
   Box,
   CircularProgress,
   Paper,
+  Typography,
 } from '@mui/material';
 import ErrorToast from '../Components/ErrorToast';
 import styled from 'styled-components';
@@ -132,36 +133,38 @@ export default function Dashboard() {
     <Container>
       {loading ? (
         <CircularProgress />
+      ) : chartPrefs ? (
+        <>
+          <ChartSettings
+            value={chartPrefs}
+            currencies={currencies}
+            recordTypes={recordTypes}
+            minDate={minDate}
+            maxDate={maxDate}
+            handleChange={(value) => setChartPrefs(value)}
+            hideDisposition={chart === ChartType.Pie}
+          />
+          <ChartContainer>
+            {chart === ChartType.Pie ? (
+              <PieChartTab
+                records={applicableRecords}
+                recordTypes={recordTypes}
+                currency={chartPrefs.currency}
+              />
+            ) : (
+              <BarChartTab
+                records={applicableRecords}
+                recordTypes={recordTypes}
+                currency={chartPrefs.currency}
+                disposition={chartPrefs.disposition}
+              />
+            )}
+          </ChartContainer>
+        </>
       ) : (
-        chartPrefs && (
-          <>
-            <ChartSettings
-              value={chartPrefs}
-              currencies={currencies}
-              recordTypes={recordTypes}
-              minDate={minDate}
-              maxDate={maxDate}
-              handleChange={(value) => setChartPrefs(value)}
-              hideDisposition={chart === ChartType.Pie}
-            />
-            <ChartContainer>
-              {chart === ChartType.Pie ? (
-                <PieChartTab
-                  records={applicableRecords}
-                  recordTypes={recordTypes}
-                  currency={chartPrefs.currency}
-                />
-              ) : (
-                <BarChartTab
-                  records={applicableRecords}
-                  recordTypes={recordTypes}
-                  currency={chartPrefs.currency}
-                  disposition={chartPrefs.disposition}
-                />
-              )}
-            </ChartContainer>
-          </>
-        )
+        <Typography textAlign="center">
+          There are no records to show.
+        </Typography>
       )}
       <NavContainer elevation={3}>
         <BottomNavigation

@@ -1,6 +1,7 @@
 export enum StorageKeys {
   USER = 'user',
   CHART_PREFERENCES = 'chart_prefs',
+  RULES = 'rules',
 }
 
 export function setItem(key: StorageKeys, item: object) {

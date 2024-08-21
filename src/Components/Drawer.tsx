@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
-import FlagIcon from '@mui/icons-material/Flag';
+import CategoryIcon from '@mui/icons-material/Category';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -47,13 +47,13 @@ const drawerClosedWidth = 64;
 
 const menuItems: NavItem[] = [
   { label: 'Dashboard', route: '/dashboard', icon: <DashboardIcon /> },
-  { label: 'Upload', route: '/upload', icon: <FileUploadIcon /> },
   {
     label: 'Manage records',
     route: '/records',
     icon: <ManageSearchIcon />,
   },
-  { label: 'Manage types', route: '/types', icon: <FlagIcon /> },
+  { label: 'Manage types', route: '/types', icon: <CategoryIcon /> },
+  { label: 'Upload', route: '/upload', icon: <FileUploadIcon /> },
 ];
 
 export default function Drawer() {
