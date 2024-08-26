@@ -1,11 +1,11 @@
 export enum StorageKeys {
   USER = 'user',
   CHART_PREFERENCES = 'chart_prefs',
-  RULES = 'rules',
+  UPLOAD_OPTIONS = 'upload_options',
 }
 
 export function setItem(key: StorageKeys, item: object) {
-  sessionStorage.setItem(key, JSON.stringify(item));
+  sessionStorage.setItem(key, btoa(JSON.stringify(item)));
 }
 
 export function getItem<T>(key: StorageKeys): T | undefined {
@@ -13,7 +13,7 @@ export function getItem<T>(key: StorageKeys): T | undefined {
 
   if (item) {
     try {
-      return JSON.parse(item);
+      return JSON.parse(atob(item));
     } catch (e) {}
   }
 

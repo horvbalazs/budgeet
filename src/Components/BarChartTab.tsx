@@ -71,9 +71,20 @@ export default function BarChartTab({
 
         switch (disposition) {
           case 'week':
-          case 'month':
             aFirst = parseInt(aDispValue.match(/^\S*/g)?.[0] ?? '0');
             bFirst = parseInt(bDispValue.match(/^\S*/g)?.[0] ?? '0');
+            aSecond = parseInt(aDispValue.match(/\((.*?)\)/g)?.[0] ?? '0');
+            bSecond = parseInt(bDispValue.match(/\((.*?)\)/g)?.[0] ?? '0');
+            break;
+          case 'month':
+            const aMonthName = aDispValue.match(/^\S*/g)?.[0];
+            const bMonthName = bDispValue.match(/^\S*/g)?.[0];
+            aFirst = aMonthName
+              ? parseInt(moment().month(aMonthName).format('M'))
+              : Number.POSITIVE_INFINITY;
+            bFirst = bMonthName
+              ? parseInt(moment().month(bMonthName).format('M'))
+              : Number.POSITIVE_INFINITY;
             aSecond = parseInt(aDispValue.match(/\((.*?)\)/g)?.[0] ?? '0');
             bSecond = parseInt(bDispValue.match(/\((.*?)\)/g)?.[0] ?? '0');
             break;
@@ -144,7 +155,7 @@ function addLabels(
 
 function getDispositionValue(disposition: Disposition, record: Record): string {
   const year = moment(record.date).year();
-  const month = moment(record.date).month();
+  const month = moment(record.date).startOf('month').format('MMM');
   const week = moment(record.date).week();
 
   switch (disposition) {

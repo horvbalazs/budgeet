@@ -14,8 +14,7 @@ import TypeTag from '../Components/TypeTag';
 import EditTypeCell from '../Components/EditTypeCell';
 import { useRecord } from '../Hooks/useRecord';
 import { useNavigate } from 'react-router-dom';
-import RulesModal from '../Components/RulesModal';
-import { Rule } from '../Models/Rule';
+import UploadOptionsModal from '../Components/UploadOptionsModal';
 import getUID from '../Helpers/getUID';
 import {
   TableButtonContainer,
@@ -27,7 +26,21 @@ import { DATE_FORMAT } from '../Models/Format';
 import moment from 'moment';
 import { compareRecordTypes } from '../Helpers/compareRecordTypes';
 import { RecordType } from '../Models/RecordType';
-import { getItem, StorageKeys } from '../storage';
+import { getItem, setItem, StorageKeys } from '../storage';
+import { UploadOption } from '../Models/UploadOption';
+import SettingsIcon from '@mui/icons-material/Settings';
+
+const DEFAULT_OPTIONS: UploadOption = {
+  fieldIndexes: {
+    date: 0,
+    name: 1,
+    note: 2,
+    value: 3,
+    currency: 4,
+  },
+  dateFormat: '',
+  rules: [],
+};
 
 interface WithTempId extends RecordBase {
   id: string;
@@ -47,15 +60,21 @@ export default function Upload() {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadedRecords, setUploadedRecords] = useState<WithTempId[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [rules, setRules] = useState<Rule[]>([]);
+  const [options, setOptions] = useState<UploadOption>(getDefaultOptions());
 
   useEffect(() => {
-    const storageRules = getItem<Rule[]>(StorageKeys.RULES);
+    const storageOptions = getItem<UploadOption>(StorageKeys.UPLOAD_OPTIONS);
 
-    if (storageRules) {
-      setRules(storageRules);
+    if (storageOptions) {
+      setOptions(storageOptions);
     }
   }, []);
+
+  useEffect(() => {
+    if (options) {
+      setItem(StorageKeys.UPLOAD_OPTIONS, options);
+    }
+  }, [options]);
 
   const loading = typesFetching || uploading;
   const error = uploadError ?? fetchError;
@@ -63,7 +82,7 @@ export default function Upload() {
   const parseCSV = async (file: File): Promise<RecordBase[]> => {
     const text = await file.text();
 
-    return ArrayToRecords(CSVToArray(text), rules);
+    return ArrayToRecords(CSVToArray(text), options);
   };
 
   const handleFileChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +134,7 @@ export default function Upload() {
       {
         currency: '',
         date: moment().valueOf(),
-        description: '',
+        note: '',
         id: getUID(prev),
         name: 'NEW_RECORD',
         type: DEFAULT_TYPE.id,
@@ -136,9 +155,8 @@ export default function Upload() {
     });
   };
 
-  const handleRulesChanged = (value: Rule[]) => {
-    setRules(value);
-    setModalOpen(false);
+  const handleOptionsChanged = (value: UploadOption) => {
+    setOptions(value);
   };
 
   const columns: GridColDef<WithTempId>[] = [
@@ -157,8 +175,8 @@ export default function Upload() {
       flex: 1,
     },
     {
-      field: 'description',
-      headerName: 'Description',
+      field: 'note',
+      headerName: 'Note',
       editable: true,
       flex: 3,
     },
@@ -229,9 +247,13 @@ export default function Upload() {
           {uploadedRecords.length > 0 ? 'Upload more' : 'Upload'}
         </LoadingButton>
         <Box flex={1} />
-        <Badge badgeContent={rules.length} color="primary">
-          <LoadingButton variant="outlined" onClick={() => setModalOpen(true)}>
-            Manage rules
+        <Badge badgeContent={options?.rules.length} color="primary">
+          <LoadingButton
+            variant="outlined"
+            onClick={() => setModalOpen(true)}
+            startIcon={<SettingsIcon />}
+          >
+            Options
           </LoadingButton>
         </Badge>
         <LoadingButton
@@ -265,12 +287,28 @@ export default function Upload() {
         onChange={handleFileChange}
         hidden
       />
-      <RulesModal
-        recordTypes={recordTypes}
-        open={modalOpen}
-        handleClose={handleRulesChanged}
-      />
+      {options && (
+        <UploadOptionsModal
+          options={options}
+          recordTypes={recordTypes}
+          open={modalOpen}
+          handleChange={handleOptionsChanged}
+          handleClose={() => setModalOpen(false)}
+        />
+      )}
       <ErrorToast error={error} />
     </TableContainer>
   );
+}
+
+function getDefaultOptions(): UploadOption {
+  const lang = navigator.languages
+    ? navigator.languages[0]
+    : navigator.language;
+
+  return {
+    ...DEFAULT_OPTIONS,
+    dateFormat:
+      moment().locale(lang).localeData().longDateFormat('L') ?? 'MM/DD/YYYY',
+  };
 }

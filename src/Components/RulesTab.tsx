@@ -1,15 +1,6 @@
-import { useState } from 'react';
 import { RecordType } from '../Models/RecordType';
 import { Rule } from '../Models/Rule';
-import {
-  Autocomplete,
-  Box,
-  Chip,
-  IconButton,
-  Modal,
-  Paper,
-  TextField,
-} from '@mui/material';
+import { Autocomplete, Box, Chip, IconButton, TextField } from '@mui/material';
 import {
   DataGrid,
   GridCellParams,
@@ -23,80 +14,70 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TypeTag from './TypeTag';
 import EditTypeCell from './EditTypeCell';
 import getUID from '../Helpers/getUID';
-import { Record } from '../Models/Record';
-
-const Container = styled(Box)`
-  max-width: 1024px;
-  max-height: 512px;
-  width: 90%;
-  height: 90%;
-  margin: auto;
-`;
+import { compareRecordTypes } from '../Helpers/compareRecordTypes';
+import { DEFAULT_TYPE } from '../Hooks/useRecordType';
 
 const ChipContainer = styled(Box)`
   display: flex;
+  flex-wrap: wrap;
   gap: 1px;
   align-items: center;
   height: 100%;
 `;
 
 interface OwnProps {
+  rules: Rule[];
   recordTypes: RecordType[];
-  open: boolean;
-  handleClose: (value: Rule[]) => void;
+  handleChange: (value: Rule[]) => void;
 }
 
-export default function RulesModal({
+export default function RulesTab({
+  rules,
   recordTypes,
-  open,
-  handleClose,
+  handleChange,
 }: OwnProps) {
-  const [rules, setRules] = useState<Rule[]>([]);
-  const options: (keyof Record)[] = ['name', 'description', 'currency'];
-
   const handleAddRule = () => {
-    setRules((prev) => [
-      ...prev,
+    handleChange([
+      ...rules,
       {
-        id: getUID(prev),
-        field: 'description',
+        id: getUID(rules),
+        fieldIndex: 0,
         keywords: [],
+        type: DEFAULT_TYPE.id,
       },
     ]);
   };
 
   const handleUpdateRule = (value: Rule) => {
-    setRules((prev) => prev.map((r) => (r.id === value.id ? value : r)));
+    handleChange(rules.map((r) => (r.id === value.id ? value : r)));
 
     return value;
   };
 
   const handleDeleteRule = (id: string) => {
-    setRules((prev) => prev.filter((r) => r.id !== id));
+    handleChange(rules.filter((r) => r.id !== id));
   };
 
   const columns: GridColDef<Rule>[] = [
     {
-      field: 'field',
+      field: 'fieldIndex',
       headerName: 'Field',
       editable: true,
-      type: 'singleSelect',
-      valueOptions: options,
-      flex: 1,
+      type: 'number',
     },
     {
       field: 'keywords',
       headerName: 'Keywords',
       editable: true,
       renderCell: ({ row }) => (
-        <ChipContainer display={'flex'} gap={1}>
+        <ChipContainer>
           {row.keywords?.map((kw, i) => (
             <Chip key={i} label={kw} />
           ))}
         </ChipContainer>
       ),
       renderEditCell: (props) => <EditKeywordsCell {...props} />,
-      flex: 2,
+      flex: 5,
     },
     {
       field: 'type',
@@ -104,6 +85,8 @@ export default function RulesModal({
       editable: true,
       headerAlign: 'center',
       align: 'center',
+      flex: 1,
+      filterable: false,
       renderCell: ({ row }) => {
         const type = recordTypes.find((rt) => rt.id === row.type);
 
@@ -112,12 +95,12 @@ export default function RulesModal({
       renderEditCell: (props) => (
         <EditTypeCell {...props} recordTypes={recordTypes} />
       ),
-      flex: 1,
+      sortComparator: (a: string, b: string) =>
+        compareRecordTypes(a, b, recordTypes),
     },
     {
       field: 'actions',
       headerName: '',
-      flex: 1,
       headerAlign: 'center',
       align: 'center',
       sortable: false,
@@ -125,11 +108,9 @@ export default function RulesModal({
       disableColumnMenu: true,
       resizable: false,
       renderCell: ({ row }: GridCellParams<Rule>) => (
-        <Box>
-          <IconButton onClick={() => handleDeleteRule(row.id)}>
-            <DeleteIcon color="error" />
-          </IconButton>
-        </Box>
+        <IconButton onClick={() => handleDeleteRule(row.id)}>
+          <DeleteIcon color="error" />
+        </IconButton>
       ),
       renderHeader: () => (
         <Box>
@@ -142,20 +123,18 @@ export default function RulesModal({
   ];
 
   return (
-    <Modal
-      open={open}
-      onClose={() => handleClose(rules)}
-      sx={{ display: 'flex', justifyContent: 'center' }}
-    >
-      <Container component={Paper}>
-        <DataGrid
-          rows={rules}
-          columns={columns}
-          editMode="cell"
-          processRowUpdate={handleUpdateRule}
-        />
-      </Container>
-    </Modal>
+    <DataGrid
+      rows={rules}
+      columns={columns}
+      editMode="cell"
+      processRowUpdate={handleUpdateRule}
+      sx={{
+        '& .MuiDataGrid-cell:hover': {
+          background: 'inherit',
+          overflow: 'visible',
+        },
+      }}
+    />
   );
 }
 
@@ -170,11 +149,21 @@ function EditKeywordsCell(props: GridRenderCellParams<Rule, number>) {
 
   return (
     <Autocomplete
-      sx={{ width: '100%', padding: 0 }}
+      sx={{
+        width: '100%',
+        padding: 0,
+        overflow: 'visible',
+        '.MuiOutlinedInput-root': { padding: '6px' },
+      }}
       limitTags={4}
       options={[]}
       renderInput={(params) => (
-        <TextField {...params} placeholder="Add keywords" autoFocus />
+        <TextField
+          {...params}
+          placeholder="Add keywords"
+          sx={{ height: '51px' }}
+          autoFocus
+        />
       )}
       value={row.keywords}
       onChange={(_, values) => handleChange(values)}

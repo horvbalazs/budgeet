@@ -2,27 +2,51 @@ import moment from 'moment';
 import { RecordBase } from '../Models/Record';
 import { Rule } from '../Models/Rule';
 import { DEFAULT_TYPE } from '../Hooks/useRecordType';
+import { UploadOption } from '../Models/UploadOption';
 
-export default function ArrayToRecords(arr: string[][], rules: Rule[] = []) {
+export default function ArrayToRecords(arr: string[][], options: UploadOption) {
   const result: RecordBase[] = [];
 
   arr.forEach((row) => {
-    const record: RecordBase = {
-      date: moment(row[0] ?? moment.now()).valueOf(),
-      name: row[1] ?? '',
-      description: row[2] ?? '',
-      value: Math.abs(
-        parseFloat(row[3].split(' ').join('').split(',').join('.')) ?? 0
-      ),
-      currency: row[4] ?? '',
-      type: DEFAULT_TYPE.id,
-    };
+    const errors: string[] = [];
 
-    const type = ApplyRules(rules, record);
-
-    if (type) {
-      record.type = type;
+    const date = row[options.fieldIndexes.date];
+    if (!date) {
+      errors.push(`Invalid index: ${options.fieldIndexes.date}`);
     }
+
+    const name = row[options.fieldIndexes.name];
+    if (!name) {
+      errors.push(`Invalid index: ${options.fieldIndexes.name}`);
+    }
+
+    const note = row[options.fieldIndexes.note];
+    if (!note) {
+      errors.push(`Invalid index: ${options.fieldIndexes.note}`);
+    }
+
+    const value = row[options.fieldIndexes.value];
+    if (!value) {
+      errors.push(`Invalid index: ${options.fieldIndexes.value}`);
+    }
+
+    const currency = row[options.fieldIndexes.currency];
+    if (!currency) {
+      errors.push(`Invalid index: ${options.fieldIndexes.currency}`);
+    }
+
+    if (errors.length > 0) {
+      throw new Error(errors.join('\n'));
+    }
+
+    const record: RecordBase = {
+      date: moment(date, options.dateFormat).valueOf(),
+      name,
+      value: Math.abs(parseFloat(value.replace(/,/g, ''))),
+      currency,
+      note,
+      ...ApplyRules(options.rules, row),
+    };
 
     result.push(record);
   });
@@ -30,18 +54,23 @@ export default function ArrayToRecords(arr: string[][], rules: Rule[] = []) {
   return result;
 }
 
-function ApplyRules(rules: Rule[], record: RecordBase): string | undefined {
+function ApplyRules(
+  rules: Rule[],
+  rawRecord: string[]
+): { note?: string; type: string } {
   for (const rule of rules) {
-    const value = record[rule.field];
-    if (
-      typeof value == 'string' &&
-      rule.keywords.some((kw) =>
+    const value = rawRecord[rule.fieldIndex];
+
+    if (typeof value == 'string') {
+      const keyword = rule.keywords.find((kw) =>
         (value as string).toLocaleLowerCase().includes(kw.toLocaleLowerCase())
-      )
-    ) {
-      return rule.type;
+      );
+
+      if (keyword) {
+        return { note: keyword, type: rule.type };
+      }
     }
   }
 
-  return;
+  return { type: DEFAULT_TYPE.id };
 }

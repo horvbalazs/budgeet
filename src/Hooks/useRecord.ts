@@ -32,7 +32,7 @@ export function useRecord(userId: string, fetchRecords = true) {
               id: doc.id,
               date: doc.data().date,
               name: doc.data().name,
-              description: doc.data().description,
+              note: doc.data().note,
               value: doc.data().value,
               currency: doc.data().currency,
               userId: doc.data().userId,

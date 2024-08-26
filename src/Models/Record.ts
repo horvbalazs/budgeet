@@ -1,7 +1,7 @@
 export interface RecordBase {
   date: number;
   name: string;
-  description: string;
+  note: string;
   type: string;
   value: number;
   currency: string;

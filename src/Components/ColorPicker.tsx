@@ -60,10 +60,14 @@ function ColorPickerInner({
   useEffect(() => {
     const rect = parentRef.current?.getBoundingClientRect();
     const pickerRect = pickerRef.current?.getBoundingClientRect();
+    const { innerHeight: viewportHeight } = window;
 
     if (rect && pickerRect) {
       setPosition({
-        top: rect.bottom + 10,
+        top:
+          pickerRect.height < viewportHeight - rect.bottom
+            ? rect.bottom + 10
+            : rect.top - pickerRect.height - 10,
         left: rect.left - pickerRect.width / 2 + rect.width / 2,
       });
     }

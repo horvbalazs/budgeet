@@ -1,8 +1,6 @@
-import { RecordBase } from './Record';
-
 export interface Rule {
   id: string;
-  field: keyof RecordBase;
+  fieldIndex: number;
   keywords: string[];
-  type?: string;
+  type: string;
 }

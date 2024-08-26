@@ -75,8 +75,8 @@ export default function ManageRecords() {
       flex: 1,
     },
     {
-      field: 'description',
-      headerName: 'Description',
+      field: 'note',
+      headerName: 'Note',
       editable: true,
       filterOperators: getGridStringOperators(),
       flex: 3,
