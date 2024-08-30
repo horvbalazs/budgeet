@@ -2,7 +2,13 @@ import { Badge, Box, IconButton } from '@mui/material';
 import { DEFAULT_TYPE, useRecordType } from '../Hooks/useRecordType';
 import AuthContext from '../Contexts/AuthContext';
 import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
-import { RecordBase, RecordType, UploadOption } from '@budgeet/types';
+import {
+  AnonymousItem,
+  Record,
+  RecordBase,
+  RecordType,
+  UploadOption,
+} from '@budgeet/types';
 import ErrorToast from '../Components/ErrorToast';
 import CSVToArray from '../Helpers/CSVToArray';
 import ArrayToRecords from '../Helpers/ArrayToRecords';
@@ -40,10 +46,6 @@ const DEFAULT_OPTIONS: UploadOption = {
   rules: [],
 };
 
-interface WithTempId extends RecordBase {
-  id: string;
-}
-
 export default function Upload() {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -56,7 +58,9 @@ export default function Upload() {
   const { addRecords } = useRecord(user?.id!, false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [uploadedRecords, setUploadedRecords] = useState<WithTempId[]>([]);
+  const [uploadedRecords, setUploadedRecords] = useState<
+    AnonymousItem<Record>[]
+  >([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [options, setOptions] = useState<UploadOption>(getDefaultOptions());
 
@@ -100,7 +104,7 @@ export default function Upload() {
           const temp = [...prev];
 
           result.forEach((r) => {
-            temp.push({ ...r, id: getUID(temp) });
+            temp.push({ ...r, anonymousId: getUID() });
           });
 
           return temp;
@@ -117,11 +121,13 @@ export default function Upload() {
   };
 
   const handleRemoveRow = (rowId: string) => {
-    setUploadedRecords((prev) => prev.filter((r) => r.id !== rowId));
+    setUploadedRecords((prev) => prev.filter((r) => r.anonymousId !== rowId));
   };
 
-  const handleUpdate = (row: WithTempId) => {
-    setUploadedRecords((prev) => prev.map((r) => (r.id === row.id ? row : r)));
+  const handleUpdate = (row: AnonymousItem<Record>) => {
+    setUploadedRecords((prev) =>
+      prev.map((r) => (r.anonymousId === row.anonymousId ? row : r))
+    );
 
     return row;
   };
@@ -133,17 +139,18 @@ export default function Upload() {
         currency: '',
         date: moment().valueOf(),
         note: '',
-        id: getUID(prev),
+        anonymousId: getUID(),
         name: 'NEW_RECORD',
         type: DEFAULT_TYPE.id,
         value: 0,
+        userId: '',
       },
     ]);
   };
 
   const handleSave = () => {
     const records: RecordBase[] = uploadedRecords.map((r) => {
-      const { id: _, ...withoutId } = r;
+      const { anonymousId: _, ...withoutId } = r;
 
       return withoutId;
     });
@@ -157,7 +164,7 @@ export default function Upload() {
     setOptions(value);
   };
 
-  const columns: GridColDef<WithTempId>[] = [
+  const columns: GridColDef<AnonymousItem<Record>>[] = [
     {
       field: 'date',
       headerName: 'Date',
@@ -230,7 +237,10 @@ export default function Upload() {
         </Box>
       ),
       renderCell: ({ row }) => (
-        <IconButton color="error" onClick={() => handleRemoveRow(row.id)}>
+        <IconButton
+          color="error"
+          onClick={() => handleRemoveRow(row.anonymousId)}
+        >
           <DeleteIcon />
         </IconButton>
       ),
@@ -270,6 +280,7 @@ export default function Upload() {
           loading={loading}
           rowSelection={false}
           editMode="cell"
+          getRowId={row => row.anonymousId}
           processRowUpdate={(value) => handleUpdate(value)}
         />
       </TableWrapper>

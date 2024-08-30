@@ -39,7 +39,7 @@ export default function RulesTab({
     handleChange([
       ...rules,
       {
-        id: getUID(rules),
+        id: getUID(),
         fieldIndex: 0,
         keywords: [],
         type: DEFAULT_TYPE.id,
