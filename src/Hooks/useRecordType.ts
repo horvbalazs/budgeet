@@ -10,7 +10,7 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore';
-import { RecordType, RecordTypeBase } from '../Models/RecordType';
+import { RecordType, RecordTypeBase } from '@budgeet/types';
 
 const COLLECTION_ID = 'types';
 

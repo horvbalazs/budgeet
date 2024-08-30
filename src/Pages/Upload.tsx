@@ -2,7 +2,7 @@ import { Badge, Box, IconButton } from '@mui/material';
 import { DEFAULT_TYPE, useRecordType } from '../Hooks/useRecordType';
 import AuthContext from '../Contexts/AuthContext';
 import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
-import { RecordBase } from '../Models/Record';
+import { RecordBase, RecordType, UploadOption } from '@budgeet/types';
 import ErrorToast from '../Components/ErrorToast';
 import CSVToArray from '../Helpers/CSVToArray';
 import ArrayToRecords from '../Helpers/ArrayToRecords';
@@ -22,12 +22,10 @@ import {
   TableWrapper,
 } from '../Components/Common';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { DATE_FORMAT } from '../Models/Format';
+import { DATE_FORMAT } from '../Constants/Format';
 import moment from 'moment';
 import { compareRecordTypes } from '../Helpers/compareRecordTypes';
-import { RecordType } from '../Models/RecordType';
 import { getItem, setItem, StorageKeys } from '../storage';
-import { UploadOption } from '../Models/UploadOption';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 const DEFAULT_OPTIONS: UploadOption = {

@@ -1,5 +1,4 @@
-import { RecordType } from '../Models/RecordType';
-import { Rule } from '../Models/Rule';
+import { Rule, RecordType } from '@budgeet/types';
 import { Autocomplete, Box, Chip, IconButton, TextField } from '@mui/material';
 import {
   DataGrid,

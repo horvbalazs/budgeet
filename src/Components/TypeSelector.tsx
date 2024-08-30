@@ -4,7 +4,7 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import { RecordType } from '../Models/RecordType';
+import { RecordType } from '@budgeet/types';
 import TypeTag from './TypeTag';
 import styled from 'styled-components';
 

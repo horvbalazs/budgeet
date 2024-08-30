@@ -10,7 +10,7 @@ import {
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid';
-import { RecordType } from '../Models/RecordType';
+import { RecordType } from '@budgeet/types';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ColorPicker from '../Components/ColorPicker';

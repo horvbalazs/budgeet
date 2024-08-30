@@ -5,7 +5,7 @@ import {
   GridColDef,
   GridRowSelectionModel,
 } from '@mui/x-data-grid';
-import { Record } from '../Models/Record';
+import { Record, RecordType } from '@budgeet/types';
 import EditDateCell from '../Components/EditDateCell';
 import { useRecordType } from '../Hooks/useRecordType';
 import { useContext, useEffect, useState } from 'react';
@@ -21,9 +21,8 @@ import {
   TableContainer,
   TableWrapper,
 } from '../Components/Common';
-import { DATE_FORMAT } from '../Models/Format';
+import { DATE_FORMAT } from '../Constants/Format';
 import moment from 'moment';
-import { RecordType } from '../Models/RecordType';
 import { compareRecordTypes } from '../Helpers/compareRecordTypes';
 
 const anyOfOperator = getGridStringOperators().filter(

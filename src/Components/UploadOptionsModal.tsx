@@ -1,7 +1,6 @@
-import { RecordType } from '../Models/RecordType';
+import { UploadOption, RecordType } from '@budgeet/types';
 import { Box, IconButton, Modal, Paper, Tab, Tabs } from '@mui/material';
 import styled from 'styled-components';
-import { UploadOption } from '../Models/UploadOption';
 import { PropsWithChildren, useState } from 'react';
 import RulesTab from './RulesTab';
 import CloseIcon from '@mui/icons-material/Close';

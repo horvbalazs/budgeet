@@ -1,4 +1,4 @@
-import { RecordType } from '../Models/RecordType';
+import { RecordType } from '@budgeet/types';
 
 export function compareRecordTypes(
   a: string,

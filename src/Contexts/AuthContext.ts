@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { User } from '../Models/User';
+import { User } from '@budgeet/types';
 
 interface AuthContextValue {
   user?: User;

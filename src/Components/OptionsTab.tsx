@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FieldIndex, UploadOption } from '../Models/UploadOption';
+import { UploadOption, FieldIndex } from '@budgeet/types';
 import { Box, Divider, TextField, Typography } from '@mui/material';
 
 const Container = styled(Box)`

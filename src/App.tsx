@@ -6,7 +6,7 @@ import { Box, CssBaseline, Theme, ThemeProvider, Toolbar } from '@mui/material';
 import styled, { ThemeProvider as StyledTheme } from 'styled-components';
 import AuthContext from './Contexts/AuthContext';
 import { useState } from 'react';
-import { User } from './Models/User';
+import { User } from '@budgeet/types';
 import ThemeContext from './Contexts/ThemeContext';
 import { darkTheme, lightTheme } from './theme';
 import routes from './routes';

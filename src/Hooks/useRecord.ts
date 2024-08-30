@@ -8,7 +8,7 @@ import {
   where,
   writeBatch,
 } from 'firebase/firestore';
-import { Record, RecordBase } from '../Models/Record';
+import { Record, RecordBase } from '@budgeet/types';
 
 const COLLECTION_ID = 'financeRecords';
 

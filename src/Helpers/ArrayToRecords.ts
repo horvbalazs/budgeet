@@ -1,8 +1,7 @@
 import moment from 'moment';
-import { RecordBase } from '../Models/Record';
-import { Rule } from '../Models/Rule';
+import { RecordBase, UploadOption, Rule } from '@budgeet/types';
 import { DEFAULT_TYPE } from '../Hooks/useRecordType';
-import { UploadOption } from '../Models/UploadOption';
+
 
 export default function ArrayToRecords(arr: string[][], options: UploadOption) {
   const result: RecordBase[] = [];

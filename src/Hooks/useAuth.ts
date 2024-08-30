@@ -4,7 +4,7 @@ import { useContext, useState } from 'react';
 import { AvatarGenerator } from 'random-avatar-generator';
 import { auth } from '../firebase';
 import AuthContext from '../Contexts/AuthContext';
-import { User } from '../Models/User';
+import { User } from '@budgeet/types';
 import { getItem, removeItem, setItem, StorageKeys } from '../storage';
 
 export function useAuth() {
