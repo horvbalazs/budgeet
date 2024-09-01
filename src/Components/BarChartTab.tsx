@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import styled from 'styled-components';
 import moment from 'moment';
 import { MakeOptional } from '@mui/x-charts/internals';
-import { Disposition, Record, RecordType } from '@budgeet/types';
+import { Disposition, Record, RecordType } from '@budgeet/shared';
 
 const Container = styled(Box)`
   height: calc(100% - 128px);

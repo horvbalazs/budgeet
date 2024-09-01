@@ -1,4 +1,4 @@
-import { Rule, RecordType } from '@budgeet/types';
+import { Rule, RecordType, getUID, DEFAULT_TYPE, compareRecordTypes } from '@budgeet/shared';
 import { Autocomplete, Box, Chip, IconButton, TextField } from '@mui/material';
 import {
   DataGrid,
@@ -12,9 +12,6 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TypeTag from './TypeTag';
 import EditTypeCell from './EditTypeCell';
-import getUID from '../Helpers/getUID';
-import { compareRecordTypes } from '../Helpers/compareRecordTypes';
-import { DEFAULT_TYPE } from '../Hooks/useRecordType';
 
 const ChipContainer = styled(Box)`
   display: flex;

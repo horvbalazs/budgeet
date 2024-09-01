@@ -4,7 +4,7 @@ import {
   useGridApiContext,
 } from '@mui/x-data-grid';
 import TypeSelector from './TypeSelector';
-import { RecordType } from '@budgeet/types';
+import { RecordType } from '@budgeet/shared';
 
 interface WithType extends GridValidRowModel {
   type?: string;

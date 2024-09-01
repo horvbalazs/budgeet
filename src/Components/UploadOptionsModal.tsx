@@ -1,4 +1,4 @@
-import { UploadOption, RecordType } from '@budgeet/types';
+import { UploadOption, RecordType } from '@budgeet/shared';
 import { Box, IconButton, Modal, Paper, Tab, Tabs } from '@mui/material';
 import styled from 'styled-components';
 import { PropsWithChildren, useState } from 'react';

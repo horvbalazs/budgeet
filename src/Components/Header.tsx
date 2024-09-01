@@ -13,12 +13,16 @@ import {
 import { useContext, useState } from 'react';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import AuthContext from '../Contexts/AuthContext';
-import { useAuth } from '../Hooks/useAuth';
-import ThemeContext from '../Contexts/ThemeContext';
 import styled from 'styled-components';
 import { ReactComponent as Logo } from '../Images/HeaderLogo.svg';
 import { ReactComponent as LogoDark } from '../Images/HeaderLogoDark.svg';
+import {
+  AuthContext,
+  StorageContext,
+  ThemeContext,
+  useAuth,
+} from '@budgeet/shared';
+import { auth } from '../firebase';
 
 const Container = styled(Box)`
   display: flex;
@@ -44,8 +48,9 @@ const LogoContainer = styled(Box)`
 export default function Header() {
   const theme = useTheme();
   const { toggleTheme } = useContext(ThemeContext);
+  const { storage } = useContext(StorageContext);
   const { user } = useContext(AuthContext);
-  const { logout } = useAuth();
+  const { logout } = useAuth(storage!, auth);
   const [anchorEl, setAnchorEl] = useState<HTMLElement>();
   const open = Boolean(anchorEl);
 

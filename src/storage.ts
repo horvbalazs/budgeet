@@ -1,25 +1,23 @@
-export enum StorageKeys {
-  USER = 'user',
-  CHART_PREFERENCES = 'chart_prefs',
-  UPLOAD_OPTIONS = 'upload_options',
-}
+import { CacheStorage, StorageKeys } from '@budgeet/shared';
 
-export function setItem(key: StorageKeys, item: object) {
-  sessionStorage.setItem(key, btoa(JSON.stringify(item)));
-}
+export const cacheClient: CacheStorage = {
+  getItem<T>(key: StorageKeys) {
+    const item = sessionStorage.getItem(key);
 
-export function getItem<T>(key: StorageKeys): T | undefined {
-  const item = sessionStorage.getItem(key);
+    if (item) {
+      try {
+        return JSON.parse(atob(item)) as T;
+      } catch (e) {}
+    }
 
-  if (item) {
-    try {
-      return JSON.parse(atob(item));
-    } catch (e) {}
-  }
+    return undefined;
+  },
 
-  return undefined;
-}
+  setItem<T>(key: StorageKeys, item: T) {
+    sessionStorage.setItem(key, btoa(JSON.stringify(item)));
+  },
 
-export function removeItem(key: StorageKeys) {
-  sessionStorage.removeItem(key);
-}
+  clearItem(key: StorageKeys) {
+    sessionStorage.removeItem(key);
+  },
+};

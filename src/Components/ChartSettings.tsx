@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ChartPreferences, Disposition, RecordType } from '@budgeet/types';
+import { ChartPreferences, Disposition, RecordType } from '@budgeet/shared';
 import {
   Box,
   FormControl,

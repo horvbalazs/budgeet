@@ -1,37 +1,39 @@
 import { Badge, Box, IconButton } from '@mui/material';
-import { DEFAULT_TYPE, useRecordType } from '../Hooks/useRecordType';
-import AuthContext from '../Contexts/AuthContext';
 import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 import {
   AnonymousItem,
+  ArrayToRecords,
+  AuthContext,
+  compareRecordTypes,
+  CSVToArray,
+  DATE_FORMAT,
+  DEFAULT_TYPE,
+  getUID,
   Record,
   RecordBase,
   RecordType,
+  StorageContext,
+  StorageKeys,
   UploadOption,
-} from '@budgeet/types';
+  useRecord,
+  useRecordType,
+} from '@budgeet/shared';
 import ErrorToast from '../Components/ErrorToast';
-import CSVToArray from '../Helpers/CSVToArray';
-import ArrayToRecords from '../Helpers/ArrayToRecords';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { LoadingButton } from '@mui/lab';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditDateCell from '../Components/EditDateCell';
 import TypeTag from '../Components/TypeTag';
 import EditTypeCell from '../Components/EditTypeCell';
-import { useRecord } from '../Hooks/useRecord';
 import { useNavigate } from 'react-router-dom';
 import UploadOptionsModal from '../Components/UploadOptionsModal';
-import getUID from '../Helpers/getUID';
 import {
   TableButtonContainer,
   TableContainer,
   TableWrapper,
 } from '../Components/Common';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { DATE_FORMAT } from '../Constants/Format';
 import moment from 'moment';
-import { compareRecordTypes } from '../Helpers/compareRecordTypes';
-import { getItem, setItem, StorageKeys } from '../storage';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 const DEFAULT_OPTIONS: UploadOption = {
@@ -49,13 +51,14 @@ const DEFAULT_OPTIONS: UploadOption = {
 export default function Upload() {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const { storage } = useContext(StorageContext);
   const { user } = useContext(AuthContext);
   const {
     recordTypes,
     loading: typesFetching,
     error: fetchError,
-  } = useRecordType(user?.id!);
-  const { addRecords } = useRecord(user?.id!, false);
+  } = useRecordType(user!, storage!);
+  const { addRecords } = useRecord(user!, storage!, false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadedRecords, setUploadedRecords] = useState<
@@ -65,7 +68,9 @@ export default function Upload() {
   const [options, setOptions] = useState<UploadOption>(getDefaultOptions());
 
   useEffect(() => {
-    const storageOptions = getItem<UploadOption>(StorageKeys.UPLOAD_OPTIONS);
+    const storageOptions = storage!.cache.getItem<UploadOption>(
+      StorageKeys.UPLOAD_OPTIONS
+    );
 
     if (storageOptions) {
       setOptions(storageOptions);
@@ -74,7 +79,7 @@ export default function Upload() {
 
   useEffect(() => {
     if (options) {
-      setItem(StorageKeys.UPLOAD_OPTIONS, options);
+      storage!.cache.setItem(StorageKeys.UPLOAD_OPTIONS, options);
     }
   }, [options]);
 
@@ -280,7 +285,7 @@ export default function Upload() {
           loading={loading}
           rowSelection={false}
           editMode="cell"
-          getRowId={row => row.anonymousId}
+          getRowId={(row) => row.anonymousId}
           processRowUpdate={(value) => handleUpdate(value)}
         />
       </TableWrapper>

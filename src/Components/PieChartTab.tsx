@@ -2,7 +2,7 @@ import { pieArcLabelClasses, PieChart } from '@mui/x-charts';
 import { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import styled from 'styled-components';
-import { Record, RecordType } from '@budgeet/types';
+import { Record, RecordType } from '@budgeet/shared';
 
 const Container = styled(Box)`
   height: calc(100% - 128px);

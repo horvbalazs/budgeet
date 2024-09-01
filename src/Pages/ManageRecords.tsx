@@ -5,12 +5,8 @@ import {
   GridColDef,
   GridRowSelectionModel,
 } from '@mui/x-data-grid';
-import { Record, RecordType } from '@budgeet/types';
 import EditDateCell from '../Components/EditDateCell';
-import { useRecordType } from '../Hooks/useRecordType';
 import { useContext, useEffect, useState } from 'react';
-import AuthContext from '../Contexts/AuthContext';
-import { useRecord } from '../Hooks/useRecord';
 import EditTypeCell from '../Components/EditTypeCell';
 import TypeTag from '../Components/TypeTag';
 import { Box } from '@mui/material';
@@ -21,28 +17,37 @@ import {
   TableContainer,
   TableWrapper,
 } from '../Components/Common';
-import { DATE_FORMAT } from '../Constants/Format';
 import moment from 'moment';
-import { compareRecordTypes } from '../Helpers/compareRecordTypes';
+import {
+  AuthContext,
+  compareRecordTypes,
+  DATE_FORMAT,
+  Record,
+  RecordType,
+  StorageContext,
+  useRecord,
+  useRecordType,
+} from '@budgeet/shared';
 
 const anyOfOperator = getGridStringOperators().filter(
   (op) => op.value === 'isAnyOf'
 );
 
 export default function ManageRecords() {
+  const { storage } = useContext(StorageContext);
   const { user } = useContext(AuthContext);
   const {
     recordTypes,
     loading: recordTypesLoading,
     error: recordTypesError,
-  } = useRecordType(user?.id!);
+  } = useRecordType(user!, storage!);
   const {
     records: defaultRecords,
     loading: recordsLoading,
     error: recordsError,
     editRecords,
     deleteRecords,
-  } = useRecord(user?.id!);
+  } = useRecord(user!, storage!);
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([]);
   const [records, setRecords] = useState<Record[]>([]);

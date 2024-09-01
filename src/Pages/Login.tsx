@@ -1,11 +1,11 @@
-import { useAuth } from '../Hooks/useAuth';
-import { Box, Typography, useTheme } from '@mui/material';
+import { AuthContext, StorageContext, useAuth } from '@budgeet/shared';
+import { Box, Link, Typography, useTheme } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import styled from 'styled-components';
 import { useContext, useEffect } from 'react';
-import AuthContext from '../Contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import ErrorToast from '../Components/ErrorToast';
+import { auth } from '../firebase';
 
 const Container = styled(Box)`
   display: flex;
@@ -20,10 +20,22 @@ const Container = styled(Box)`
   }
 `;
 
+const ButtonLink = styled(Link)`
+  text-decoration: none !important;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 export default function Login() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { loading, error, authenticate } = useAuth();
+  const { storage } = useContext(StorageContext);
+  const { loading, error, authenticate, signInAsGuest } = useAuth(
+    storage!,
+    auth
+  );
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -44,6 +56,9 @@ export default function Login() {
       >
         Login
       </LoadingButton>
+      <ButtonLink onClick={() => signInAsGuest()}>
+        Continue as guest.
+      </ButtonLink>
       <ErrorToast error={error} />
     </Container>
   );

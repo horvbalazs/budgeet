@@ -1,7 +1,4 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { useRecord } from '../Hooks/useRecord';
-import AuthContext from '../Contexts/AuthContext';
-import { useRecordType } from '../Hooks/useRecordType';
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -15,11 +12,18 @@ import styled from 'styled-components';
 import PieChartTab from '../Components/PieChartTab';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import { ChartPreferences, Record } from '@budgeet/types';
 import ChartSettings from '../Components/ChartSettings';
 import moment from 'moment';
 import BarChartTab from '../Components/BarChartTab';
-import { getItem, setItem, StorageKeys } from '../storage';
+import {
+  AuthContext,
+  ChartPreferences,
+  Record,
+  StorageContext,
+  StorageKeys,
+  useRecord,
+  useRecordType,
+} from '@budgeet/shared';
 
 const Container = styled(Box)`
   width: 100%;
@@ -52,17 +56,18 @@ enum ChartType {
 }
 
 export default function Dashboard() {
+  const { storage } = useContext(StorageContext);
   const { user } = useContext(AuthContext);
   const {
     records,
     loading: recordsLoading,
     error: recordsError,
-  } = useRecord(user?.id!);
+  } = useRecord(user!, storage!);
   const {
     recordTypes,
     loading: typesLoading,
     error: typesError,
-  } = useRecordType(user?.id!);
+  } = useRecordType(user!, storage!);
   const [chart, setChart] = useState<ChartType>(ChartType.Pie);
   const [chartPrefs, setChartPrefs] = useState<ChartPreferences>();
   const [applicableRecords, setApplicableRecords] = useState<Record[]>([]);
@@ -91,7 +96,7 @@ export default function Dashboard() {
   }, [records]);
 
   useEffect(() => {
-    const storagePrefs = getItem<ChartPreferences>(
+    const storagePrefs = storage!.cache.getItem<ChartPreferences>(
       StorageKeys.CHART_PREFERENCES
     );
 
@@ -121,7 +126,7 @@ export default function Dashboard() {
         )
       );
 
-      setItem(StorageKeys.CHART_PREFERENCES, chartPrefs);
+      storage!.cache.setItem(StorageKeys.CHART_PREFERENCES, chartPrefs);
     }
   }, [chartPrefs]);
 

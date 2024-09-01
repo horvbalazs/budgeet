@@ -1,6 +1,4 @@
 import { useContext } from 'react';
-import { DEFAULT_TYPE, useRecordType } from '../Hooks/useRecordType';
-import AuthContext from '../Contexts/AuthContext';
 import { Box, IconButton } from '@mui/material';
 import styled from 'styled-components';
 import {
@@ -10,12 +8,18 @@ import {
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid';
-import { RecordType } from '@budgeet/types';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ColorPicker from '../Components/ColorPicker';
 import ErrorToast from '../Components/ErrorToast';
 import { ColorBox } from '../Components/Common';
+import {
+  AuthContext,
+  DEFAULT_TYPE,
+  RecordType,
+  StorageContext,
+  useRecordType,
+} from '@budgeet/shared';
 
 const TableWrapper = styled(Box)`
   width: 100%;
@@ -24,26 +28,27 @@ const TableWrapper = styled(Box)`
 `;
 
 export default function ManageTypes() {
+  const { storage } = useContext(StorageContext);
   const { user } = useContext(AuthContext);
   const {
     recordTypes,
     loading,
     error,
-    addRecordType,
-    editRecordType,
-    deleteRecordType,
-  } = useRecordType(user?.id!);
+    addRecordTypes,
+    editRecordTypes,
+    deleteRecordTypes,
+  } = useRecordType(user!, storage!);
 
   const handleAddRecordType = () => {
-    addRecordType({ type: 'NEW_TYPE', color: '#000' });
+    addRecordTypes([{ type: 'NEW_TYPE', color: '#000' }]);
   };
 
   const handleDeleteRecordType = (id: string) => {
-    deleteRecordType(id);
+    deleteRecordTypes([id]);
   };
 
   const handleUpdateRecordType = (value: RecordType) => {
-    editRecordType(value);
+    editRecordTypes([value]);
 
     return value;
   };

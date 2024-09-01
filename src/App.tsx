@@ -4,16 +4,22 @@ import Header from './Components/Header';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Box, CssBaseline, Theme, ThemeProvider, Toolbar } from '@mui/material';
 import styled, { ThemeProvider as StyledTheme } from 'styled-components';
-import AuthContext from './Contexts/AuthContext';
 import { useState } from 'react';
-import { User } from '@budgeet/types';
-import ThemeContext from './Contexts/ThemeContext';
 import { darkTheme, lightTheme } from './theme';
 import routes from './routes';
-import { getItem, StorageKeys } from './storage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import Drawer from './Components/Drawer';
+import {
+  AnonymousUser,
+  AuthContext,
+  DefaultStorageClient,
+  StorageContext,
+  ThemeContext,
+  User,
+} from '@budgeet/shared';
+import { cacheClient } from './storage';
+import { db } from './firebase';
 
 const Container = styled(Box)`
   display: flex;
@@ -25,8 +31,11 @@ const Container = styled(Box)`
 `;
 
 function App() {
-  const storageUser = getItem<User>(StorageKeys.USER);
-  const [user, setUser] = useState<User | undefined>(storageUser);
+  const storage = new DefaultStorageClient(cacheClient, db);
+  const storageUser = storage.getCachedUser();
+  const [user, setUser] = useState<User | AnonymousUser | undefined>(
+    storageUser
+  );
   const [theme, setTheme] = useState<Theme>(darkTheme);
 
   return (
@@ -44,24 +53,26 @@ function App() {
               }}
             >
               <AuthContext.Provider value={{ user, setUser }}>
-                <BrowserRouter>
-                  <Box sx={{ display: 'flex' }}>
-                    <Header />
-                    {user && <Drawer />}
-                    <Container>
-                      <Toolbar />
-                      <Box
-                        flex={1}
-                        display="flex"
-                        justifyContent="center"
-                        minHeight={0}
-                      >
-                        <Routes>{routes}</Routes>
-                      </Box>
-                    </Container>
-                  </Box>
-                  <div id="popper-root" />
-                </BrowserRouter>
+                <StorageContext.Provider value={{ storage }}>
+                  <BrowserRouter>
+                    <Box sx={{ display: 'flex' }}>
+                      <Header />
+                      {user && <Drawer />}
+                      <Container>
+                        <Toolbar />
+                        <Box
+                          flex={1}
+                          display="flex"
+                          justifyContent="center"
+                          minHeight={0}
+                        >
+                          <Routes>{routes}</Routes>
+                        </Box>
+                      </Container>
+                    </Box>
+                    <div id="popper-root" />
+                  </BrowserRouter>
+                </StorageContext.Provider>
               </AuthContext.Provider>
             </ThemeContext.Provider>
           </LocalizationProvider>

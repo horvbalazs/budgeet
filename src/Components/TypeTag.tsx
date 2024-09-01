@@ -1,5 +1,5 @@
 import { Chip, useTheme } from '@mui/material';
-import { RecordType } from '@budgeet/types';
+import { RecordType } from '@budgeet/shared';
 
 interface OwnProps {
   recordType: RecordType;
