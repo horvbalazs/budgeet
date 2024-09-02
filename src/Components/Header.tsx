@@ -22,7 +22,6 @@ import {
   ThemeContext,
   useAuth,
 } from '@budgeet/shared';
-import { auth } from '../firebase';
 
 const Container = styled(Box)`
   display: flex;
@@ -50,7 +49,7 @@ export default function Header() {
   const { toggleTheme } = useContext(ThemeContext);
   const { storage } = useContext(StorageContext);
   const { user } = useContext(AuthContext);
-  const { logout } = useAuth(storage!, auth);
+  const { logout } = useAuth(storage!);
   const [anchorEl, setAnchorEl] = useState<HTMLElement>();
   const open = Boolean(anchorEl);
 

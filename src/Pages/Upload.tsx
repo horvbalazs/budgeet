@@ -68,13 +68,13 @@ export default function Upload() {
   const [options, setOptions] = useState<UploadOption>(getDefaultOptions());
 
   useEffect(() => {
-    const storageOptions = storage!.cache.getItem<UploadOption>(
-      StorageKeys.UPLOAD_OPTIONS
-    );
-
-    if (storageOptions) {
-      setOptions(storageOptions);
-    }
+    storage!.cache
+      .getItem<UploadOption>(StorageKeys.UPLOAD_OPTIONS)
+      .then((storageOptions) => {
+        if (storageOptions) {
+          setOptions(storageOptions);
+        }
+      });
   }, []);
 
   useEffect(() => {

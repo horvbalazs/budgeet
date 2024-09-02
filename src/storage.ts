@@ -1,7 +1,7 @@
 import { CacheStorage, StorageKeys } from '@budgeet/shared';
 
 export const cacheClient: CacheStorage = {
-  getItem<T>(key: StorageKeys) {
+  async getItem<T>(key: StorageKeys) {
     const item = sessionStorage.getItem(key);
 
     if (item) {
@@ -13,11 +13,11 @@ export const cacheClient: CacheStorage = {
     return undefined;
   },
 
-  setItem<T>(key: StorageKeys, item: T) {
+  async setItem<T>(key: StorageKeys, item: T) {
     sessionStorage.setItem(key, btoa(JSON.stringify(item)));
   },
 
-  clearItem(key: StorageKeys) {
+  async clearItem(key: StorageKeys) {
     sessionStorage.removeItem(key);
   },
 };

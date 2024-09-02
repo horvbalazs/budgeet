@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ErrorToast from '../Components/ErrorToast';
-import { auth } from '../firebase';
 
 const Container = styled(Box)`
   display: flex;
@@ -32,10 +31,7 @@ export default function Login() {
   const theme = useTheme();
   const navigate = useNavigate();
   const { storage } = useContext(StorageContext);
-  const { loading, error, authenticate, signInAsGuest } = useAuth(
-    storage!,
-    auth
-  );
+  const { loading, error, authenticate, signInAsGuest } = useAuth(storage!);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {

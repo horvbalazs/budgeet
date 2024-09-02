@@ -96,21 +96,21 @@ export default function Dashboard() {
   }, [records]);
 
   useEffect(() => {
-    const storagePrefs = storage!.cache.getItem<ChartPreferences>(
-      StorageKeys.CHART_PREFERENCES
-    );
-
-    if (storagePrefs) {
-      setChartPrefs(storagePrefs);
-    } else if (currencies.length > 0) {
-      setChartPrefs({
-        currency: currencies[0],
-        startDate: minDate,
-        endDate: maxDate,
-        selectedTypes: recordTypes.map((rt) => rt.id),
-        disposition: 'year',
+    storage!.cache
+      .getItem<ChartPreferences>(StorageKeys.CHART_PREFERENCES)
+      .then((storagePrefs) => {
+        if (storagePrefs) {
+          setChartPrefs(storagePrefs);
+        } else if (currencies.length > 0) {
+          setChartPrefs({
+            currency: currencies[0],
+            startDate: minDate,
+            endDate: maxDate,
+            selectedTypes: recordTypes.map((rt) => rt.id),
+            disposition: 'year',
+          });
+        }
       });
-    }
   }, [currencies, recordTypes, minDate, maxDate]);
 
   useEffect(() => {
