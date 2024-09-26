@@ -16,7 +16,6 @@ import ChartSettings from '../Components/ChartSettings';
 import moment from 'moment';
 import BarChartTab from '../Components/BarChartTab';
 import {
-  AuthContext,
   ChartPreferences,
   Record,
   StorageContext,
@@ -57,17 +56,16 @@ enum ChartType {
 
 export default function Dashboard() {
   const { storage } = useContext(StorageContext);
-  const { user } = useContext(AuthContext);
   const {
     records,
     loading: recordsLoading,
     error: recordsError,
-  } = useRecord(user!, storage!);
+  } = useRecord();
   const {
     recordTypes,
     loading: typesLoading,
     error: typesError,
-  } = useRecordType(user!, storage!);
+  } = useRecordType();
   const [chart, setChart] = useState<ChartType>(ChartType.Pie);
   const [chartPrefs, setChartPrefs] = useState<ChartPreferences>();
   const [applicableRecords, setApplicableRecords] = useState<Record[]>([]);

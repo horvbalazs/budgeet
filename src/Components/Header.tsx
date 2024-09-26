@@ -18,10 +18,10 @@ import { ReactComponent as Logo } from '../Images/HeaderLogo.svg';
 import { ReactComponent as LogoDark } from '../Images/HeaderLogoDark.svg';
 import {
   AuthContext,
-  StorageContext,
   ThemeContext,
-  useAuth,
+  ThemeOptions,
 } from '@budgeet/shared';
+import { useAuth } from '../Hooks/useAuth';
 
 const Container = styled(Box)`
   display: flex;
@@ -47,9 +47,8 @@ const LogoContainer = styled(Box)`
 export default function Header() {
   const theme = useTheme();
   const { toggleTheme } = useContext(ThemeContext);
-  const { storage } = useContext(StorageContext);
   const { user } = useContext(AuthContext);
-  const { logout } = useAuth(storage!);
+  const { logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement>();
   const open = Boolean(anchorEl);
 
@@ -78,11 +77,20 @@ export default function Header() {
                 >
                   {user.name}
                 </Typography>
-                <Avatar src={user.avatar} />
+                <Avatar src={user.avatar}>{user.name.split(' ')[0][0]}{user.name.split(' ')[1][0]}</Avatar>
               </AvatarButton>
             </>
           )}
-          <IconButton onClick={toggleTheme} disableRipple>
+          <IconButton
+            onClick={() =>
+              toggleTheme(
+                theme.palette.mode === 'dark'
+                  ? ThemeOptions.Light
+                  : ThemeOptions.Dark
+              )
+            }
+            disableRipple
+          >
             {theme?.palette.mode === 'dark' ? (
               <LightModeIcon />
             ) : (

@@ -1,6 +1,6 @@
 import { CacheStorage, StorageKeys } from '@budgeet/shared';
 
-export const cacheClient: CacheStorage = {
+const cacheClient: CacheStorage = {
   async getItem<T>(key: StorageKeys) {
     const item = sessionStorage.getItem(key);
 
@@ -21,3 +21,5 @@ export const cacheClient: CacheStorage = {
     sessionStorage.removeItem(key);
   },
 };
+
+export default cacheClient;

@@ -6,7 +6,7 @@ import {
   GridRowSelectionModel,
 } from '@mui/x-data-grid';
 import EditDateCell from '../Components/EditDateCell';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import EditTypeCell from '../Components/EditTypeCell';
 import TypeTag from '../Components/TypeTag';
 import { Box } from '@mui/material';
@@ -19,12 +19,10 @@ import {
 } from '../Components/Common';
 import moment from 'moment';
 import {
-  AuthContext,
   compareRecordTypes,
   DATE_FORMAT,
   Record,
   RecordType,
-  StorageContext,
   useRecord,
   useRecordType,
 } from '@budgeet/shared';
@@ -34,20 +32,18 @@ const anyOfOperator = getGridStringOperators().filter(
 );
 
 export default function ManageRecords() {
-  const { storage } = useContext(StorageContext);
-  const { user } = useContext(AuthContext);
   const {
     recordTypes,
     loading: recordTypesLoading,
     error: recordTypesError,
-  } = useRecordType(user!, storage!);
+  } = useRecordType();
   const {
     records: defaultRecords,
     loading: recordsLoading,
     error: recordsError,
     editRecords,
     deleteRecords,
-  } = useRecord(user!, storage!);
+  } = useRecord();
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>([]);
   const [records, setRecords] = useState<Record[]>([]);

@@ -3,7 +3,6 @@ import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 import {
   AnonymousItem,
   ArrayToRecords,
-  AuthContext,
   compareRecordTypes,
   CSVToArray,
   DATE_FORMAT,
@@ -52,13 +51,12 @@ export default function Upload() {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { storage } = useContext(StorageContext);
-  const { user } = useContext(AuthContext);
   const {
     recordTypes,
     loading: typesFetching,
     error: fetchError,
-  } = useRecordType(user!, storage!);
-  const { addRecords } = useRecord(user!, storage!, false);
+  } = useRecordType();
+  const { addRecords } = useRecord(false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadedRecords, setUploadedRecords] = useState<

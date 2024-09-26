@@ -17,9 +17,11 @@ import {
   StorageContext,
   StorageKeys,
   ThemeContext,
+  ThemeOptions,
   User,
 } from '@budgeet/shared';
-import { cacheClient } from './storage';
+import cacheClient from './storage';
+import fireStore from './fireStore';
 
 const Container = styled(Box)`
   display: flex;
@@ -35,10 +37,28 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | AnonymousUser | undefined>();
   const [theme, setTheme] = useState<Theme>(darkTheme);
+  const [themeMode, setThemeMode] = useState<ThemeOptions>(
+    ThemeOptions.Default
+  );
 
   useEffect(() => {
-    setStorage(new DefaultStorageClient(cacheClient));
+    setStorage(new DefaultStorageClient(cacheClient, fireStore));
   }, []);
+
+  useEffect(() => {
+    switch (themeMode) {
+      case ThemeOptions.Light:
+        setTheme(lightTheme);
+        break;
+      case ThemeOptions.Dark:
+        setTheme(darkTheme);
+        break;
+      case ThemeOptions.Default:
+        const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
+        setTheme(darkThemeMq ? darkTheme : lightTheme);
+        break;
+    }
+  }, [themeMode]);
 
   useEffect(() => {
     storage?.cache.getItem<User>(StorageKeys.USER).then((storageUser) => {
@@ -55,10 +75,8 @@ function App() {
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <ThemeContext.Provider
               value={{
-                toggleTheme: () =>
-                  setTheme((prev) =>
-                    prev.palette.mode === 'dark' ? lightTheme : darkTheme
-                  ),
+                theme: themeMode,
+                toggleTheme: setThemeMode,
               }}
             >
               <AuthContext.Provider value={{ user, setUser }}>

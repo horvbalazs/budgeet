@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { Box, IconButton } from '@mui/material';
 import styled from 'styled-components';
 import {
@@ -13,13 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ColorPicker from '../Components/ColorPicker';
 import ErrorToast from '../Components/ErrorToast';
 import { ColorBox } from '../Components/Common';
-import {
-  AuthContext,
-  DEFAULT_TYPE,
-  RecordType,
-  StorageContext,
-  useRecordType,
-} from '@budgeet/shared';
+import { DEFAULT_TYPE, RecordType, useRecordType } from '@budgeet/shared';
 
 const TableWrapper = styled(Box)`
   width: 100%;
@@ -28,8 +21,6 @@ const TableWrapper = styled(Box)`
 `;
 
 export default function ManageTypes() {
-  const { storage } = useContext(StorageContext);
-  const { user } = useContext(AuthContext);
   const {
     recordTypes,
     loading,
@@ -37,7 +28,7 @@ export default function ManageTypes() {
     addRecordTypes,
     editRecordTypes,
     deleteRecordTypes,
-  } = useRecordType(user!, storage!);
+  } = useRecordType();
 
   const handleAddRecordType = () => {
     addRecordTypes([{ type: 'NEW_TYPE', color: '#000' }]);

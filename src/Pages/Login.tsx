@@ -1,10 +1,11 @@
-import { AuthContext, StorageContext, useAuth } from '@budgeet/shared';
+import { AuthContext } from '@budgeet/shared';
 import { Box, Link, Typography, useTheme } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import styled from 'styled-components';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ErrorToast from '../Components/ErrorToast';
+import { useAuth } from '../Hooks/useAuth';
 
 const Container = styled(Box)`
   display: flex;
@@ -30,8 +31,7 @@ const ButtonLink = styled(Link)`
 export default function Login() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { storage } = useContext(StorageContext);
-  const { loading, error, authenticate, signInAsGuest } = useAuth(storage!);
+  const { loading, error, authenticate, signInAsGuest } = useAuth();
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
